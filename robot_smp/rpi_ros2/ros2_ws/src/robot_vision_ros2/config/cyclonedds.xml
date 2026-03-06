@@ -1,0 +1,38 @@
+<!--
+  CycloneDDS 跨网通信配置
+  部署说明:
+    1. 复制到两台板子: cp cyclonedds.xml ~/cyclonedds.xml
+    2. 修改 Peer IP 为实际地址:
+       - 香橙派 IP (例: 192.168.50.2)
+       - 树莓派 IP (例: 192.168.50.3)
+    3. 确认 eth0 是有线网卡名称 (ip a 查看)
+-->
+<CycloneDDS xmlns="https://cdds.io/config">
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="eth0"/>
+      </Interfaces>
+      <AllowMulticast>true</AllowMulticast>
+      <!-- 增大分片以减少大消息重组开销(标注图像较大) -->
+      <FragmentSize>8000</FragmentSize>
+      <MaxMessageSize>65500</MaxMessageSize>
+    </General>
+    <Discovery>
+      <Peers>
+        <!-- ↓↓↓ 修改为实际 IP 地址 ↓↓↓ -->
+        <Peer address="192.168.50.2"/>  <!-- 香橙派 -->
+        <Peer address="192.168.50.3"/>  <!-- 树莓派 -->
+      </Peers>
+      <!-- 加速 peer 发现 -->
+      <ParticipantIndex>auto</ParticipantIndex>
+      <MaxAutoParticipantIndex>30</MaxAutoParticipantIndex>
+    </Discovery>
+    <Internal>
+      <!-- 增大接收缓冲区，防止 Action 回复丢包 -->
+      <SocketReceiveBufferSize min="1MB"/>
+      <!-- 降低写延迟 -->
+      <WriterLingerDuration>0s</WriterLingerDuration>
+    </Internal>
+  </Domain>
+</CycloneDDS>

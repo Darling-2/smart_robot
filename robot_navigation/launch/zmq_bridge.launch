@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="robot_navigation" type="zmq_nav_bridge.py" name="zmq_nav_bridge" output="screen">
+    <param name="bind_goal" value="tcp://0.0.0.0:5555"/>
+    <param name="bind_status" value="tcp://0.0.0.0:5556"/>
+    <param name="frame_id" value="map"/>
+  </node>
+</launch>
